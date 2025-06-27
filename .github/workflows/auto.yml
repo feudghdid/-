@@ -1,4 +1,4 @@
-name: ✍️ Auto Post Articles Every 30 Minutes
+name:  Post Articles 
 
 on:
   schedule:
@@ -28,9 +28,9 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           BLOG_ID: ${{ secrets.BLOG_ID }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python main.py
+        run: python sub.py
 
-      - name: 💾 Commit updated posted_articles.json
+      - name: 💾 Commit updated articles.json
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
