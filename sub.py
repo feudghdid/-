@@ -37,7 +37,7 @@ def get_access_token():
 
 # artificially 
 def generate_article(topic: str) -> str:
-    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=AIzaSyBSqog0_0vURPpUzXpP64YXoM2IQakrg3A"
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=AIzaSyAMvSkNNgMgh2oVKTyDDbbpUH_lix4Y_Ws"
     
     headers = {
         "Content-Type": "application/json"
