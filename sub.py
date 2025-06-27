@@ -5,7 +5,7 @@ import urllib.parse
 from rpt import is_duplicate, save_posted_title
 import requests
 from topic_generator import get_trending_topic
-from site import post_to_blogger
+from  site import post_to_blogger
 from meta_generator import generate_meta_description
 
 # key
