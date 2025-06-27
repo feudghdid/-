@@ -2,20 +2,20 @@ import os
 import time
 import re
 import urllib.parse
-from utils import is_duplicate, save_posted_title
+from rpt import is_duplicate, save_posted_title
 import requests
 from topic_generator import get_trending_topic
-from blogger import post_to_blogger
+from site import post_to_blogger
 from meta_generator import generate_meta_description
 
-# إعداد متغيرات البيئة
+# key
 CLIENT_ID = os.getenv("CLIENT_ID")
 CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 REFRESH_TOKEN = os.getenv("REFRESH_TOKEN")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 BLOG_ID = os.getenv("BLOG_ID") 
 
-# دالة توليد Access Token من Google
+# Gen.
 def get_access_token():
     print("🔐 Getting access token from Google...")
     token_url = "https://oauth2.googleapis.com/token"
@@ -35,7 +35,7 @@ def get_access_token():
         print("❌ Error getting access token:", e)
         return None
 
-# دالة توليد مقال باستخدام Gemini
+# artificially 
 def generate_article(topic: str) -> str:
     url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=AIzaSyDSOgakd0CgLzG0h8C1ZXIjMV7OavNax9c"
     
@@ -71,7 +71,7 @@ Avoid robotic language, repetition, or markdown. Output plain text only. Around 
     except Exception as e:
         print("❌ Error generating article with Gemini:", e)
         return "This is a default article content due to an error in generating the article."
-        
+        #Ima.
 def get_image_html(topic: str) -> str:
     safe_topic = re.sub(r"[^\w\s]", "", topic)  # إزالة الرموز مثل % و ’ و –
     query = urllib.parse.quote(f"{safe_topic}, digital art, 800x400") 
@@ -100,7 +100,7 @@ def get_image_html(topic: str) -> str:
     '''
 
 def format_article(article: str, title: str) -> str:
-    # 🔧 تنظيف الرموز الغريبة والتنسيقات
+    # clenayt
     article = re.sub(r"[\u200B-\u200D\uFEFF]", "", article)  # رموز غير مرئية
     article = re.sub(r"#\w+", "", article)  # إزالة الهاشتاقات
     article = re.sub(r"[^\x00-\x7F]+", " ", article)  # إزالة رموز غير ASCII
@@ -118,10 +118,10 @@ def format_article(article: str, title: str) -> str:
     paragraphs = article.split("\n")
     formatted_paragraphs = []
 
-    # تعريف دالة لاختيار العناوين الفرعية
+    # testing subheadings
     def is_subheading(p: str) -> bool:
         words = p.split()
-        if len(words) > 10:
+        if len(words) > 9:
             return False
 
         starts_with_cap = p[0].isupper()
@@ -140,9 +140,9 @@ def format_article(article: str, title: str) -> str:
             bool(contains_heading_keywords)
         ])
 
-        return score >= 2  # على الأقل شرطين متحققين
+        return score >= 2  # two condi.
 
-    # تنسيق الفقرات باستخدام دالة is_subheading
+    # subheading
     for p in paragraphs:
         p = p.strip()
         if not p:
@@ -157,12 +157,12 @@ def format_article(article: str, title: str) -> str:
                 f'<p style="margin:15px 0;line-height:1.8;font-size:17px;color:#333;font-family:Arial,sans-serif;">{p}</p>'
             )
 
-    # 🖼️ إضافة صورة أول المقال
+    # htaml
     image_html = get_image_html(title)
     if not title.strip() or len(title.strip()) < 4:
         title = "Path to Grow"
 
-    # 📦 تجميع المقال النهائي
+    # article fin.
     formatted_article = f'''
     <div style="text-align:center;margin-bottom:20px;">
         {image_html}
@@ -176,13 +176,13 @@ def format_article(article: str, title: str) -> str:
     return formatted_article
 
 
-# الدلة الرئيسية
+# اindef
 def main():
     topic = get_trending_topic()
-    print(f"✍️ توليد مقال عن: {topic}")
+    print(f"✍️ generate: {topic}")
     if is_duplicate(topic):
         print(f"⚠️ المقال '{topic}' تم نشره سابقًا. سيتم تجاهله.")
-        return  # يوقف التنفيذ
+        return  # st.
     article = generate_article(topic)
     meta_description = generate_meta_description(topic, article)
     formatted_article = format_article(article, topic)
@@ -191,7 +191,7 @@ def main():
         post_to_blogger(BLOG_ID, topic, formatted_article, access_token, meta_description=meta_description)
         save_posted_title(topic)
     else:
-        print("❌ Failed to get access token. Skipping post.")
+        print("❌  access token. Skipping post.")
 
 if __name__ == "__main__":
     main()
